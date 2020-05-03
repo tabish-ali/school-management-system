@@ -35,7 +35,7 @@
                <items>
                   <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="800.0" spacing="1.0">
                      <children>
-                        <TableView fx:id="coursesTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="712.0" prefWidth="700.0">
+                        <TableView fx:id="coursesTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="712.0" prefWidth="700.0" VBox.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="serialCol" maxWidth="1500.0" prefWidth="75.0" text="S.No" />
                             <TableColumn fx:id="courseCodeCol" editable="false" prefWidth="113.00003051757812" text="Course Code" />
@@ -69,7 +69,7 @@
                         <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                      </padding>
                   </VBox>
-                  <TabPane maxWidth="300.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                  <TabPane maxHeight="1.7976931348623157E308" maxWidth="300.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                       <Tab text="Time Table">
                         <content>
