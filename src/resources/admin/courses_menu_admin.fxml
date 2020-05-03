@@ -29,11 +29,11 @@
             <Button fx:id="deleteBtn" disable="true" layoutX="15.0" layoutY="22.0" mnemonicParsing="false" onAction="#deleteCourse" styleClass="top-bar-btns" text="Delete Course" />
          </children>
       </HBox>
-      <HBox spacing="5.0" styleClass="box" VBox.vgrow="ALWAYS">
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" styleClass="box" VBox.vgrow="ALWAYS">
          <children>
             <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                <items>
-                  <VBox prefWidth="800.0" spacing="1.0">
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="800.0" spacing="1.0">
                      <children>
                         <TableView fx:id="coursesTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="712.0" prefWidth="700.0">
                           <columns>
@@ -73,9 +73,9 @@
                     <tabs>
                       <Tab text="Time Table">
                         <content>
-                          <AnchorPane maxWidth="300.0" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                          <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="300.0" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="timeTable" editable="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TableView fx:id="timeTable" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <columns>
                                         <TableColumn fx:id="dayCol" editable="false" prefWidth="75.0" text="Day " />
                                         <TableColumn fx:id="timeCol" prefWidth="75.0" text="Time" />

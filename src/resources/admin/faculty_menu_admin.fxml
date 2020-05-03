@@ -25,7 +25,7 @@
             <Button layoutX="225.0" layoutY="21.0" mnemonicParsing="false" onAction="#showSideMenu" styleClass="top-bar-btns" text="Course Selection Menu" />
          </children>
       </HBox>
-      <SplitPane fx:id="splitPane" dividerPositions="0.6">
+      <SplitPane fx:id="splitPane" dividerPositions="0.6" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <items>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="716.0" prefWidth="1061.0">
                <children>
@@ -60,7 +60,7 @@
                   </TableView>
                </children>
             </VBox>
-            <VBox fx:id="courseSelectionVbox" maxWidth="450.0" prefHeight="558.0" prefWidth="500.0">
+            <VBox fx:id="courseSelectionVbox" maxHeight="1.7976931348623157E308" maxWidth="450.0" prefHeight="558.0" prefWidth="500.0">
                <children>
                   <HBox prefHeight="32.0" styleClass="top-bar">
                      <children>

@@ -10,7 +10,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css_files/style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="courses.CoursePlanController">
    <children>
-      <HBox fx:id="topBar" alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
+      <HBox fx:id="topBar" alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="10.0" VBox.vgrow="ALWAYS">
          <children>
             <VBox layoutX="15.0" layoutY="15.0" spacing="5.0" styleClass="box" HBox.hgrow="ALWAYS">
                <children>
@@ -37,6 +37,6 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </HBox>
-      <fx:include fx:id="coursesPlanTable" source="course_plan_table.fxml" />
+      <fx:include fx:id="coursesPlanTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="course_plan_table.fxml" />
    </children>
 </VBox>
