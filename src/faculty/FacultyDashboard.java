@@ -180,10 +180,12 @@ public class FacultyDashboard implements Initializable {
                 attendanceController.setAttendanceTable();
                 examsController.getExamsTableController().setExamsTable(course_id);
                 examsController.getExamsTableController().initializeForFaculty();
+                examsController.setContextMenu();
                 resultsController.examsResultsController.setResultsTable(course_id);
                 examsController.getUploadedExamsController().setUploadedExams(course_id);
                 coursePlanController.getCoursesPlanTableController().setCoursePlan(course_id);
                 coursePlanController.getCoursesPlanTableController().setForFaculty();
+                coursePlanController.setContextMenu();
                 setSelectedBtnStyle(select_btn);
             });
 

@@ -2,12 +2,15 @@ package courses;
 
 import config.Dialogs;
 import faculty.FacultyDashboard;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import models.CoursePlan;
+import models.Courses;
+
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,15 +28,16 @@ public class CoursePlanController implements Initializable {
     private Button addBtn;
 
     @FXML
-    private Button delBtn;
+    private Button delBtn, editBtn, cancelBtn;
 
     @FXML
     CoursesPlanTable coursesPlanTableController;
 
-    ObservableList<CoursePlan> coursePlansList = FXCollections.observableArrayList();
-    TableView<CoursePlan> coursePlanTable;
+    ContextMenu context_menu = new ContextMenu();
 
-    static CoursePlanController coursePlanController;
+    MenuItem edit_menu_btn = new MenuItem("Edit");
+    MenuItem del_menu_btn = new MenuItem("Delete");
+    MenuItem cancel_menu_btn = new MenuItem("Cancel");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -44,15 +48,45 @@ public class CoursePlanController implements Initializable {
         planField.textProperty().addListener((observable, oldValue, newValue) ->
                 addBtn.setDisable(newValue.isEmpty()));
 
-        coursePlanController = this;
+        tableListener();
+
     }
 
-    public void setCoursePlansList(ObservableList<CoursePlan> coursePlansList) {
-        this.coursePlansList = coursePlansList;
+    public void tableListener() {
+        // listen for table selection to enable action buttons related to table
+        coursesPlanTableController.getPlanTable().getSelectionModel().selectedItemProperty().
+                addListener((obs, oldSelection, newSelection)
+                        -> {
+                    delBtn.setDisable(newSelection == null);
+                    editBtn.setDisable(newSelection == null);
+                    cancelBtn.setDisable(newSelection == null);
+
+                    for (MenuItem menu_items : getCoursesPlanTableController().
+                            getPlanTable().getContextMenu().getItems()) {
+                        menu_items.setDisable(newSelection == null);
+                    }
+                });
     }
 
-    public void setCoursePlanTable(TableView<CoursePlan> coursePlanTable) {
-        this.coursePlanTable = coursePlanTable;
+    public void setContextMenu() {
+
+        tableListener();
+
+        context_menu.getItems().addAll(edit_menu_btn, del_menu_btn, cancel_menu_btn);
+
+        edit_menu_btn.setGraphic(new ImageView(new Image("resources/icons/edit_property_15px.png")));
+
+        del_menu_btn.setGraphic(new ImageView(new Image("resources/icons/remove_15px.png")));
+
+        cancel_menu_btn.setGraphic(new ImageView(new Image("resources/icons/cancel_15px.png")));
+
+        edit_menu_btn.setOnAction(e -> edit());
+
+        del_menu_btn.setOnAction(e -> deleteCoursePlan());
+
+        cancel_menu_btn.setOnAction(e -> cancel());
+
+        coursesPlanTableController.getPlanTable().setContextMenu(context_menu);
     }
 
     public CoursesPlanTable getCoursesPlanTableController() {
@@ -71,9 +105,9 @@ public class CoursePlanController implements Initializable {
 
             CoursePlan course_plan = new CourseDatabases().getLatestCoursePlan(course_id);
 
-            coursePlansList.add(course_plan);
+            coursesPlanTableController.getCoursePlansList().add(course_plan);
 
-            coursePlanTable.refresh();
+            coursesPlanTableController.getPlanTable().refresh();
 
             tableListener();
         }
@@ -81,26 +115,35 @@ public class CoursePlanController implements Initializable {
 
     @FXML
     private void deleteCoursePlan() {
-        if (!coursePlanTable.getSelectionModel().isEmpty()) {
+        if (!coursesPlanTableController.getPlanTable().getSelectionModel().isEmpty()) {
 
-            int choice = new Dialogs().confirmationAlert("Confirmation", "Do you want to delete selected plans?",
+            int choice = new Dialogs().confirmationAlert("Confirmation",
+                    "Do you want to delete selected plans?",
                     "All selected plans from table will be deleted. \n Are you sure to continue?");
 
             if (choice == 1) {
 
-                ObservableList<CoursePlan> course_plan_list = coursePlanTable.getSelectionModel().
+                ObservableList<CoursePlan> course_plan_list = coursesPlanTableController.getPlanTable().getSelectionModel().
                         getSelectedItems();
-                new CourseDatabases().deleteCoursePlan(coursePlansList);
-                coursePlansList.removeAll(course_plan_list);
-                coursePlanTable.refresh();
+                new CourseDatabases().deleteCoursePlan(coursesPlanTableController.getCoursePlansList());
+                coursesPlanTableController.getCoursePlansList().removeAll(course_plan_list);
+                coursesPlanTableController.getPlanTable().refresh();
                 tableListener();
             }
         }
     }
 
-    public void tableListener() {
-        coursePlanTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection)
-                -> delBtn.setDisable(newSelection == null));
+    public void cancel() {
+
+        coursesPlanTableController.getPlanTable().getSelectionModel().clearSelection();
     }
 
+    public void edit() {
+
+        int row_no = coursesPlanTableController.getPlanTable().getFocusModel().getFocusedCell().getRow();
+        TableColumn<CoursePlan, ?> col = coursesPlanTableController.getPlanTable().
+                getFocusModel().getFocusedCell().getTableColumn();
+        coursesPlanTableController.getPlanTable().edit(row_no, col);
+        coursesPlanTableController.onChangingPlan();
+    }
 }

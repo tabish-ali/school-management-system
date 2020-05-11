@@ -35,8 +35,8 @@
 }
 
 .table-view:row-selection .table-row-cell:selected .cell, .table-view:cell-selection .cell:selected {
-   -fx-background-color: #E1E1E1;
-   -fx-border-color:  #DCDCDC;
+   -fx-background-color: #568EFF;
+   -fx-text-fill: #fff;
 }
 .table-row-cell:odd{
     -fx-background-color: -fx-table-cell-border-color,#F9F9F9;
@@ -80,7 +80,7 @@
 
 .tab-pane .tab:selected
 {
-    -fx-background-color: #1F7AFF;
+    -fx-background-color: #568EFF;
 }
 
 .tab .tab-label {

@@ -8,10 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import models.Results;
 import resources.results.ChangeResult;
@@ -26,6 +23,12 @@ public class AssignmentsResults implements Initializable {
 
     @FXML
     private Button delBtn;
+
+    @FXML
+    private MenuItem changeMenuBtn;
+
+    @FXML
+    private MenuItem delMenuBtn;
 
     @FXML
     private TableView<Results> resultsTable;
@@ -68,8 +71,12 @@ public class AssignmentsResults implements Initializable {
             if (newSelection != null) {
                 delBtn.setDisable(false);
                 changeBtn.setDisable(false);
+                delMenuBtn.setDisable(false);
+                changeMenuBtn.setDisable(false);
             } else {
                 delBtn.setDisable(true);
+                delMenuBtn.setDisable(true);
+                changeMenuBtn.setDisable(true);
                 changeBtn.setDisable(true);
             }
         });

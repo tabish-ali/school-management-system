@@ -151,7 +151,13 @@ public class AddNewCourse implements Initializable {
         String course_department = departmentField.getText();
         String start_date = startDateField.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         String end_date = endDateField.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        double fee = Double.parseDouble(feeField.getText());
+
+        double fee = 0;
+
+        if (!feeField.getText().isEmpty()) {
+            fee = Double.parseDouble(feeField.getText());
+        }
+
 
         int faculty_id = 0; // no faculty selected then id = 0
         String faculty_name = "Not Assigned Yet";

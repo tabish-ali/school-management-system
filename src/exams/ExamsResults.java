@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -26,6 +27,16 @@ public class ExamsResults implements Initializable {
 
     @FXML
     private Button delBtn;
+
+    @FXML
+    private Button changeBtn;
+
+    @FXML
+    private MenuItem delMenuBtn;
+
+    @FXML
+    private MenuItem changeMenuBtn;
+
 
     @FXML
     private TableView<Results> resultsTable;
@@ -68,7 +79,12 @@ public class ExamsResults implements Initializable {
 
         // listen for table selection to enable action buttons related to table
         resultsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection)
-                -> delBtn.setDisable(newSelection == null));
+                -> {
+            delBtn.setDisable(newSelection == null);
+            changeBtn.setDisable(newSelection == null);
+            delMenuBtn.setDisable(newSelection == null);
+            changeMenuBtn.setDisable(newSelection == null);
+        });
 
     }
 
@@ -157,7 +173,7 @@ public class ExamsResults implements Initializable {
         }
     }
 
-    public void refreshTable(){
+    public void refreshTable() {
         resultsTable.refresh();
         tableListener();
     }

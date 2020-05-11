@@ -21,7 +21,9 @@
          </padding>
          <children>
             <Button mnemonicParsing="false" onAction="#addNewFaculty" styleClass="top-bar-btns" text="Add Faculty" />
+            <Button fx:id="editBtn" disable="true" layoutX="15.0" layoutY="21.0" mnemonicParsing="false" onAction="#edit" styleClass="top-bar-btns" text="Edit" />
             <Button fx:id="deleteBtn" disable="true" layoutX="15.0" layoutY="22.0" mnemonicParsing="false" onAction="#deleteFaculty" styleClass="top-bar-btns" text="Delete Faculty" />
+            <Button fx:id="cancelBtn" disable="true" layoutX="160.0" layoutY="21.0" mnemonicParsing="false" onAction="#cancelSelection" styleClass="top-bar-btns" text="Cancel" />
             <Button layoutX="225.0" layoutY="21.0" mnemonicParsing="false" onAction="#showSideMenu" styleClass="top-bar-btns" text="Course Selection Menu" />
          </children>
       </HBox>
@@ -29,7 +31,7 @@
          <items>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="716.0" prefWidth="1061.0">
                <children>
-                  <TableView fx:id="facultyTable" prefHeight="716.0" prefWidth="985.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="facultyTable" editable="true" prefHeight="716.0" prefWidth="985.0" VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="serialCol" maxWidth="1000.0" prefWidth="75.0" text="S.No" />
                       <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
@@ -45,7 +47,25 @@
                      <contextMenu>
                         <ContextMenu>
                           <items>
-                              <MenuItem fx:id="deleteMenuBtn" mnemonicParsing="false" onAction="#deleteFaculty" text="Delete">
+                              <MenuItem fx:id="editMenuBtn" disable="true" mnemonicParsing="false" onAction="#edit" text="Edit">
+                                 <graphic>
+                                    <ImageView>
+                                       <image>
+                                          <Image url="@../icons/edit_property_15px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </MenuItem>
+                              <MenuItem fx:id="cancelMenuBtn" disable="true" mnemonicParsing="false" onAction="#cancelSelection" text="Cancel">
+                                 <graphic>
+                                    <ImageView>
+                                       <image>
+                                          <Image url="@../icons/cancel_2_15px.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </MenuItem>
+                              <MenuItem fx:id="deleteMenuBtn" disable="true" mnemonicParsing="false" onAction="#deleteFaculty" text="Delete">
                                  <graphic>
                                     <ImageView>
                                        <image>

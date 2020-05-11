@@ -1,5 +1,7 @@
 package courses;
 
+import config.DateValidator;
+import config.Dialogs;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -32,18 +34,35 @@ public class CoursesPlanTable implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         coursesPlanTableController = this;
+
+    }
+
+    public void removeContextMenu() {
+        planTable.setContextMenu(null);
+    }
+
+    public TableView<CoursePlan> getPlanTable() {
+        return planTable;
+    }
+
+    public ObservableList<CoursePlan> getCoursePlansList() {
+        return coursePlansList;
     }
 
     public static CoursesPlanTable getCoursesPlanTableController() {
         return coursesPlanTableController;
     }
 
-    public void setForFaculty(){
+    public void setForFaculty() {
 
         planTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         dateCol.setCellFactory(TextFieldTableCell.forTableColumn());
         planCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        changeCoursePlan();
+
+        planTable.getSelectionModel().setCellSelectionEnabled(true);
+        planTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        onChangingPlan();
     }
 
     public void setCoursePlan(int course_id) {
@@ -60,26 +79,33 @@ public class CoursesPlanTable implements Initializable {
         planCol.setCellValueFactory(new PropertyValueFactory<>("plan"));
 
         planTable.setItems(coursePlansList);
-
-        CoursePlanController.coursePlanController.setCoursePlansList(coursePlansList);
-        CoursePlanController.coursePlanController.setCoursePlanTable(planTable);
-        CoursePlanController.coursePlanController.tableListener();
     }
 
-    public void changeCoursePlan() {
+    public void onChangingPlan() {
 
         dateCol.setOnEditCommit((TableColumn.CellEditEvent<CoursePlan, String> t) -> {
             int id = planTable.getSelectionModel().getSelectedItem().getId();
-            t.getTableView().getItems().get(t.getTablePosition().getRow()).setDate(t.getNewValue());
-            new CourseDatabases().changeCoursePlan(t.getNewValue(), "date", id);
-            setCoursePlan(courseId);
+
+            boolean validate = DateValidator.validateDate(t.getNewValue());
+
+            if (validate) {
+
+                t.getTableView().getItems().get(t.getTablePosition().getRow()).setDate(t.getNewValue());
+                new CourseDatabases().changeCoursePlan(t.getNewValue(), "date", id);
+            } else {
+                new Dialogs().errorAlert("Invalid Date", "Please enter valid date",
+                        "Date should be in this pattern dd-mm-yyyy");
+            }
+            planTable.refresh();
         });
         planCol.setOnEditCommit((TableColumn.CellEditEvent<CoursePlan, String> t) -> {
             int id = planTable.getSelectionModel().getSelectedItem().getId();
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setPlan(t.getNewValue());
             new CourseDatabases().changeCoursePlan(t.getNewValue(), "plan", id);
-            setCoursePlan(courseId);
+            planTable.refresh();
         });
 
     }
+
+
 }

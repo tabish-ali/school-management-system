@@ -260,4 +260,18 @@ public class ExamsDatabases {
             e.printStackTrace();
         }
     }
+
+    public void updateExam(String value, String col_name, int exam_id) {
+        try {
+            Connection conn = dbConnection.connectToDb();
+            String update_status = "UPDATE exams set  " + col_name + " = '" + value + "'"
+                    + " WHERE id = " + exam_id;
+
+            PreparedStatement preparedStatement = conn.prepareStatement(update_status);
+            preparedStatement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

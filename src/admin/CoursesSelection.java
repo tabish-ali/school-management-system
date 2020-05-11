@@ -116,7 +116,7 @@ public class CoursesSelection implements Initializable {
             remove_btn.setOnAction(e -> {
                 assignCoursesList.getItems().remove(list_node);
                 coursesNodeList.remove(assigned_courses_map);
-                courseDb.removeAssignedCourses(course_id, facultyID);
+                courseDb.removeAssignedCourses(course_id, faculty);
 
                 // we also need to refresh faculty table
                 // we need to subtract one from course count
@@ -171,7 +171,7 @@ public class CoursesSelection implements Initializable {
 
         if (selectedCourses().size() > 0) {
 
-            int courses_assigned = courseDb.assignCourseToFaculty(selectedCourses(), facultyID);
+            int courses_assigned = courseDb.assignCourseToFaculty(selectedCourses(), faculty);
             setAssignCourses();
             faculty.setCoursesCount(faculty.getCoursesCount() + courses_assigned);
             AdminDashboard.admin.facultyController.refreshTable();

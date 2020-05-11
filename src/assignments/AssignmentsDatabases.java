@@ -97,7 +97,7 @@ public class AssignmentsDatabases {
                 String deadline = rs.getString("deadline");
                 String content = rs.getString("content");
                 // calculating days remaining until deadline
-                long days_remaining = new CalculateDays().calculateDaysUntil(rs.getString("deadline"));
+                long days_remaining = CalculateDays.calculateDaysUntil(rs.getString("deadline"));
                 Assignments assignment = new Assignments(serial, id, course_id, topic, content, deadline, days_remaining);
                 assignments_list.add(assignment);
             }
@@ -127,7 +127,7 @@ public class AssignmentsDatabases {
                 String deadline = rs.getString("deadline");
                 String content = rs.getString("content");
                 // calculating days remaining until deadline
-                long days_remaining = new CalculateDays().calculateDaysUntil(rs.getString("deadline"));
+                long days_remaining = CalculateDays.calculateDaysUntil(rs.getString("deadline"));
                 Assignments assignment = new Assignments(serial, id, course_id, topic, content, deadline, days_remaining);
                 assignments_list.add(assignment);
             }
@@ -156,7 +156,7 @@ public class AssignmentsDatabases {
                 String deadline = rs.getString("deadline");
                 String content = rs.getString("content");
                 // calculating days remaining until deadline
-                long days_remaining = new CalculateDays().calculateDaysUntil(rs.getString("deadline"));
+                long days_remaining = CalculateDays.calculateDaysUntil(rs.getString("deadline"));
                 assignment = new Assignments(getTotalAssignments(), id, course_id, topic, content,
                         deadline, days_remaining);
             }
@@ -183,7 +183,7 @@ public class AssignmentsDatabases {
                 String deadline = rs.getString("deadline");
                 String content = rs.getString("content");
                 // calculating days remaining until deadline
-                long days_remaining = new CalculateDays().calculateDaysUntil(rs.getString("deadline"));
+                long days_remaining = CalculateDays.calculateDaysUntil(rs.getString("deadline"));
                 assignment = new Assignments(0, id, course_id, topic, content, deadline, days_remaining);
             }
 
@@ -229,7 +229,7 @@ public class AssignmentsDatabases {
                 String deadline = rs.getString("deadline");
                 String content = rs.getString("content");
                 // calculating days remaining until deadline
-                long days_remaining = new CalculateDays().calculateDaysUntil(rs.getString("deadline"));
+                long days_remaining = CalculateDays.calculateDaysUntil(rs.getString("deadline"));
 
                 assignment = new Assignments(0, id, course_id, topic, content,
                         deadline, days_remaining);
@@ -390,6 +390,21 @@ public class AssignmentsDatabases {
             Connection conn = dbConnection.connectToDb();
             String update_status = "UPDATE uploaded_assignments set status = '" + status + "'"
                     + " WHERE id = " + assignments_id;
+
+            PreparedStatement preparedStatement = conn.prepareStatement(update_status);
+            preparedStatement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateAssignment(String value, String col_name, int id) {
+
+        try {
+            Connection conn = dbConnection.connectToDb();
+            String update_status = "UPDATE assignments set " + col_name + " = '" + value + "'"
+                    + " WHERE id = " + id;
 
             PreparedStatement preparedStatement = conn.prepareStatement(update_status);
             preparedStatement.executeUpdate();

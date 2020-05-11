@@ -222,5 +222,21 @@ public class AttendanceDatabase {
         }
         return ValidateFields.round(percentage, 2);
     }
+
+    public void deleteAttendance(ObservableList<Attendance> attendance_list) {
+
+        try {
+            Connection conn = new DbConnection().connectToDb();
+
+            for (Attendance attendance : attendance_list) {
+                String delete_query = "DELETE FROM attendance WHERE id = " + attendance.getId();
+                PreparedStatement preparedStatement = conn.prepareStatement(delete_query);
+                preparedStatement.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 

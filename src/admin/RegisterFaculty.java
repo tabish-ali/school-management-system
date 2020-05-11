@@ -16,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Courses;
+
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -121,14 +122,16 @@ public class RegisterFaculty implements Initializable {
         String name = nameField.getText();
         String department = departmentField.getText();
         String office_no = officeNoField.getText();
-        String salary = salaryField.getText();
         String date_joined = dateField.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        if (!name.isEmpty() && !department.isEmpty() && !office_no.isEmpty()
-                && !salary.isEmpty() && !date_joined.isEmpty()
-                && !username.isEmpty() && !password.isEmpty()) {
+        double salary = 0.0;
+        if (!salaryField.getText().isEmpty()) {
+            salary = Double.parseDouble(salaryField.getText());
+        }
+
+        if (!name.isEmpty() && !department.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
 
 
             // putting these values in hash map and sending to faculty database class
@@ -138,21 +141,26 @@ public class RegisterFaculty implements Initializable {
             faculty_data.put("name", name);
             faculty_data.put("department", department);
             faculty_data.put("office_no", office_no);
-            faculty_data.put("salary", Double.parseDouble(salary));
+            faculty_data.put("salary", salary);
             faculty_data.put("date_joined", date_joined);
             faculty_data.put("username", username);
             faculty_data.put("password", new HashPassword().encrypt(password));
 
             FacultyDatabases facultyDatabases = new FacultyDatabases();
 
-            facultyDatabases.registerFaculty(faculty_data);
+            boolean created = facultyDatabases.registerFaculty(faculty_data);
 
-            // register the selected courses with reference to this faculty
-            facultyDatabases.registerCourses(selectedCourses());
+            if (created) {
+                // register the selected courses with reference to this faculty
+                facultyDatabases.registerCourses(selectedCourses());
+                // adding newly added faculty to faculty table
+                AdminDashboard.admin.facultyController.setNewFaculty();
 
-            // adding newly added faculty to faculty table
+                for (Courses course : selectedCourses()) {
+                    new CourseDatabases().setAssignedFaculty(course.getId(), name);
+                }
 
-            AdminDashboard.admin.facultyController.setNewFaculty();
+            }
 
         } else {
             new Dialogs().warningAlert("Warning", "Please complete the required fields", "" +

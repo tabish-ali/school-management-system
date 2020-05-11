@@ -16,8 +16,9 @@ import java.util.Map;
 
 public class FacultyDatabases {
 
-    public void registerFaculty(Map<String, Object> faculty) {
+    public boolean registerFaculty(Map<String, Object> faculty) {
 
+        boolean created = false;
         if (!checkIfUsernameExits((String) faculty.get("username"))) {
             try {
                 Connection conn = new DbConnection().connectToDb();
@@ -34,6 +35,8 @@ public class FacultyDatabases {
                 pstmt.setString(7, (String) faculty.get("password"));
                 pstmt.executeUpdate();
 
+                created = true;
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -41,6 +44,7 @@ public class FacultyDatabases {
             new Dialogs().warningAlert("Warning", "Username already exists",
                     "Faculty with this username already exists, please choose another username");
         }
+        return  created;
     }
 
     public int getLastFacultyID() {
@@ -273,5 +277,18 @@ public class FacultyDatabases {
         }
 
         return check;
+    }
+
+    public void updateFaculty(String value, String col_name, int faculty_id){
+        try{
+            Connection conn = new DbConnection().connectToDb();
+            String update_query = "UPDATE faculty SET " + col_name + " = '" + value + "'"
+                    + " WHERE id = " + faculty_id;
+            PreparedStatement preparedStatement = conn.prepareStatement(update_query);
+            preparedStatement.executeUpdate();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

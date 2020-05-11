@@ -2,6 +2,7 @@ package student;
 
 import courses.CourseDatabases;
 import config.Dialogs;
+import courses.CoursePlanController;
 import courses.CoursesPlanTable;
 import exams.ExamsTable;
 import javafx.collections.FXCollections;
@@ -236,6 +237,7 @@ public class CoursesController implements Initializable {
                 examsTableController.setExamsTable(courseId);
                 examsTableController.listenForTakeExam();
                 resultsController.setResultsStats(courseId);
+                CoursesPlanTable.getCoursesPlanTableController().removeContextMenu();
                 CoursesPlanTable.getCoursesPlanTableController().setCoursePlan(courseId);
                 setSelectedBtnStyle(select_btn);
             });

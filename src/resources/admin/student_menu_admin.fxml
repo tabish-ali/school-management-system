@@ -20,11 +20,13 @@
          <children>
             <Button mnemonicParsing="false" onAction="#addNewStudent" styleClass="top-bar-btns" text="Register Student" />
             <Button fx:id="delBtn" disable="true" layoutX="15.0" layoutY="22.0" mnemonicParsing="false" onAction="#deleteStudents" styleClass="top-bar-btns" text="Delete Student" />
+            <Button fx:id="editBtn" disable="true" layoutX="138.0" layoutY="21.0" mnemonicParsing="false" onAction="#edit" styleClass="top-bar-btns" text="Edit" />
+            <Button fx:id="cancelBtn" disable="true" layoutX="251.0" layoutY="21.0" mnemonicParsing="false" onAction="#cancel" styleClass="top-bar-btns" text="Cancel" />
          </children>
       </HBox>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
          <children>
-            <TableView fx:id="studentsTable" prefHeight="716.0" prefWidth="656.0" VBox.vgrow="ALWAYS">
+            <TableView fx:id="studentsTable" editable="true" prefHeight="716.0" prefWidth="656.0" VBox.vgrow="ALWAYS">
                <columns>
                   <TableColumn fx:id="serialCol" maxWidth="1000.0" prefWidth="75.0" text="S.No" />
                   <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
@@ -40,7 +42,25 @@
                <contextMenu>
                   <ContextMenu>
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#deleteStudents" text="Delete ">
+                        <MenuItem fx:id="editMenuBtn" disable="true" mnemonicParsing="false" onAction="#edit" text="Edit">
+                           <graphic>
+                              <ImageView>
+                                 <image>
+                                    <Image url="@../icons/edit_property_15px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem fx:id="cancelMenuBtn" disable="true" mnemonicParsing="false" onAction="#cancel" text="Cancel">
+                           <graphic>
+                              <ImageView>
+                                 <image>
+                                    <Image url="@../icons/cancel_2_15px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem fx:id="delMenuBtn" disable="true" mnemonicParsing="false" onAction="#deleteStudents" text="Delete ">
                            <graphic>
                               <ImageView>
                                  <image>

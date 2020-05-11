@@ -76,8 +76,8 @@ public class AddExam implements Initializable {
     @FXML
     private void uploadExam() {
 
-        if(!hrField.getText().isEmpty() && minField.getText().isEmpty() && secField.getText().isEmpty()
-        && timeAllottedField.getText().isEmpty()) {
+        if(!hrField.getText().isEmpty() && !minField.getText().isEmpty() && !secField.getText().isEmpty()
+        && !timeAllottedField.getText().isEmpty()) {
             int course_id = new FacultyDashboard().getSelectedCourseId();
 
             // getting start time

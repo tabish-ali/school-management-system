@@ -8,6 +8,8 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -29,14 +31,16 @@
                            </padding>
                            <children>
                               <Button layoutX="15.0" layoutY="21.0" mnemonicParsing="false" onAction="#addNewAssignment" styleClass="top-bar-btns" text="Add New" />
+                              <Button fx:id="editBtn" disable="true" layoutX="96.0" layoutY="21.0" mnemonicParsing="false" onAction="#edit" styleClass="top-bar-btns" text="Edit" />
                               <Button fx:id="delBtn" disable="true" layoutX="15.0" layoutY="22.0" mnemonicParsing="false" onAction="#delete" styleClass="top-bar-btns" text="Delete" />
-                              <Button layoutX="96.0" layoutY="21.0" mnemonicParsing="false" onAction="#refreshAssignments" styleClass="top-bar-btns" text="Refresh" />
+                              <Button fx:id="cancelBtn" disable="true" layoutX="96.0" layoutY="21.0" mnemonicParsing="false" onAction="#cancel" styleClass="top-bar-btns" text="Cancel" />
                            </children>
                         </HBox>
-                        <TableView fx:id="assignmentTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="assignmentTable" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                           <columns>
-                            <TableColumn fx:id="serialCol" maxWidth="1000.0" prefWidth="75.0" text="S.No" />
+                            <TableColumn fx:id="serialCol" editable="false" maxWidth="1000.0" prefWidth="75.0" text="S.No" />
                               <TableColumn fx:id="topicCol" prefWidth="600.0" text="Assignment Topic" />
+                              <TableColumn fx:id="contentCol" prefWidth="600.0" text="Assignment Content" />
                               <TableColumn fx:id="deadlineCol" prefWidth="600.0" text="Deadline Date" />
                               <TableColumn fx:id="remainingDaysCol" prefWidth="600.0" text="Remaining Days" />
                           </columns>
@@ -46,7 +50,31 @@
                            <contextMenu>
                               <ContextMenu>
                                 <items>
-                                  <MenuItem mnemonicParsing="false" onAction="#delete" text="Delete" />
+                                    <MenuItem fx:id="editMenuBtn" disable="true" mnemonicParsing="false" onAction="#edit" text="Edit">
+                                       <graphic>
+                                          <ImageView>
+                                             <image>
+                                                <Image url="@../icons/edit_property_15px.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic></MenuItem>
+                                    <MenuItem fx:id="cancelMenuBtn" disable="true" mnemonicParsing="false" onAction="#cancel" text="Cancel">
+                                       <graphic>
+                                          <ImageView>
+                                             <image>
+                                                <Image url="@../icons/cancel_2_15px.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </MenuItem>
+                                  <MenuItem fx:id="delMenuBtn" disable="true" mnemonicParsing="false" onAction="#delete" text="Delete">
+                                       <graphic>
+                                          <ImageView>
+                                             <image>
+                                                <Image url="@../icons/remove_15px.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic></MenuItem>
                                 </items>
                               </ContextMenu>
                            </contextMenu>

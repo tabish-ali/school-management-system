@@ -1,6 +1,7 @@
 package attendance;
 
 import animatefx.animation.FadeIn;
+import config.Dialogs;
 import faculty.FacultyDashboard;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -44,6 +45,9 @@ public class MarkAttendance implements Initializable {
     @FXML
     private Label attendancePercentageLabel;
 
+    @FXML
+    private MenuItem deleteMenuBtn;
+
     ObservableList<Attendance> attendanceList = FXCollections.observableArrayList();
     ObservableList<Students> studentList = FXCollections.observableArrayList();
 
@@ -60,9 +64,11 @@ public class MarkAttendance implements Initializable {
 
         // generating attendance for current selected course
         generateDateField.setValue(todayDate);
-        attendanceTable.setSelectionModel(null);
+        attendanceTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         filterDateField.setValue(todayDate);
+
+        tableListener();
     }
 
     public void setPercentage() {
@@ -77,12 +83,17 @@ public class MarkAttendance implements Initializable {
         int serial = 1;
         ObservableList<Attendance> filter_attendance = FXCollections.observableArrayList();
 
-        for (Attendance attendance : attendanceList) {
-            if (attendance.getDate().equals(date)) {
-                attendance.setSerial(serial++);
-                new FadeIn(attendance.getAttendanceNode()).play();
-                filter_attendance.add(attendance);
+        if (course_id != 0) {
+            for (Attendance attendance : attendanceList) {
+                if (attendance.getDate().equals(date)) {
+                    attendance.setSerial(serial++);
+                    new FadeIn(attendance.getAttendanceNode()).play();
+                    filter_attendance.add(attendance);
+                }
             }
+        } else {
+            new Dialogs().warningAlert("Warning", "No course selected",
+                    "Please select the course from side menu");
         }
         return filter_attendance;
     }
@@ -100,25 +111,34 @@ public class MarkAttendance implements Initializable {
         markAttendanceCol.setCellValueFactory(new PropertyValueFactory<>("attendanceNode"));
 
         attendanceTable.setItems(filterAttendance(date));
+
         setPercentage();
         setStatus();
+        tableListener();
     }
 
     @FXML
     private void generateAttendance() {
-        String date = generateDateField.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
-        attDb.generateAttendance(course_id, date);
+        if (course_id != 0) {
+            String date = generateDateField.getValue().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 
-        // list of students in this course
-        ObservableList<Students> studentList = new StudentDatabases().getStudentsByCourseID(course_id);
+            attDb.generateAttendance(course_id, date);
 
-        for (Students student : studentList) {
-            if (!attDb.checkIfAttendanceExits(course_id, student.getId(), date)) {
-                attDb.setAttendance(course_id, student.getId(), "N", date);
+            // list of students in this course
+            ObservableList<Students> studentList = new StudentDatabases().getStudentsByCourseID(course_id);
+
+            for (Students student : studentList) {
+                if (!attDb.checkIfAttendanceExits(course_id, student.getId(), date)) {
+                    attDb.setAttendance(course_id, student.getId(), "N", date);
+                }
             }
+            setAttendanceTable();
+            tableListener();
+        } else {
+            new Dialogs().warningAlert("Warning", "No course selected",
+                    "Please select the course from side menu");
         }
-        setAttendanceTable();
     }
 
     // listen for status buttons in mark attendance column and set attendance
@@ -164,5 +184,31 @@ public class MarkAttendance implements Initializable {
                 setPercentage();
             });
         }
+    }
+
+    public void tableListener() {
+
+        // listen for table selection to enable action buttons related to table
+        attendanceTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+                    if (newSelection != null) {
+                        deleteMenuBtn.setDisable(false);
+                    }
+                }
+        );
+    }
+
+    @FXML
+    private void deleteAttendance() {
+
+        int choice = new Dialogs().confirmationAlert("Confirmation", "Do you want to delete selected " +
+                " attendance entries?", "Once delete you will not be able to recover it.");
+        if (choice == 1) {
+            ObservableList<Attendance> selected_attendance = attendanceTable.getSelectionModel().getSelectedItems();
+            new AttendanceDatabase().deleteAttendance(selected_attendance);
+            attendanceList.removeAll(selected_attendance);
+            attendanceTable.refresh();
+            setAttendanceTable();
+        }
+
     }
 }

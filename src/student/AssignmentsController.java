@@ -5,12 +5,13 @@ package student;
  */
 
 import assignments.AssignmentsDatabases;
-import config.Dialogs;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -35,6 +36,18 @@ public class AssignmentsController {
     @FXML
     private TableColumn<?, ?> remainingDaysCol;
 
+    @FXML
+    private Button uploadBtn;
+
+    @FXML
+    private Button cancelBtn;
+
+    @FXML
+    private MenuItem uploadMenuBtn;
+
+    @FXML
+    private MenuItem cancelMenuBtn;
+
     CoursesController coursesController;
 
     ObservableList<Assignments> assignmentsList = FXCollections.observableArrayList();
@@ -42,6 +55,7 @@ public class AssignmentsController {
     public void injectCourseController(CoursesController courses_controller) {
 
         coursesController = courses_controller;
+
     }
 
     public void setAssignmentsTable(int course_id) {
@@ -54,6 +68,20 @@ public class AssignmentsController {
         remainingDaysCol.setCellValueFactory(new PropertyValueFactory<>("daysRemaining"));
 
         assignmentsTable.setItems(assignmentsList);
+
+        tableListener();
+    }
+
+    public void tableListener() {
+
+        // listen for table selection to enable action buttons related to table
+        assignmentsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+                    uploadBtn.setDisable(newSelection == null);
+                    uploadMenuBtn.setDisable(newSelection == null);
+                    cancelMenuBtn.setDisable(newSelection == null);
+                    cancelBtn.setDisable(newSelection == null);
+                }
+        );
     }
 
     @FXML
@@ -71,12 +99,18 @@ public class AssignmentsController {
                 e.printStackTrace();
             }
         }
-}
+    }
 
     public void clearTable() {
         assignmentsList.clear();
         assignmentsTable.getItems().clear();
         assignmentsTable.refresh();
+    }
+
+    @FXML
+    private void cancel() {
+
+        assignmentsTable.getSelectionModel().clearSelection();
     }
 }
 

@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CalculateDays {
 
-    public long calculateDaysUntil(String issued_date) {
+    public static long calculateDaysUntil(String issued_date) {
 
         SimpleDateFormat date_format = new SimpleDateFormat("dd-MM-yyyy");
 

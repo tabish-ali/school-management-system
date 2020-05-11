@@ -6,6 +6,8 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -36,8 +38,22 @@
          <contextMenu>
             <ContextMenu>
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#changeResult" text="Change" />
-                  <MenuItem mnemonicParsing="false" onAction="#deleteResult" text="Delete" />
+                <MenuItem fx:id="changeMenuBtn" mnemonicParsing="false" onAction="#changeResult" text="Change">
+                     <graphic>
+                        <ImageView>
+                           <image>
+                              <Image url="@../icons/change_15px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+                  <MenuItem fx:id="delMenuBtn" mnemonicParsing="false" onAction="#deleteResult" text="Delete">
+                     <graphic>
+                        <ImageView>
+                           <image>
+                              <Image url="@../icons/remove_15px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
               </items>
             </ContextMenu>
          </contextMenu>

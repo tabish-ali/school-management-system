@@ -1,5 +1,6 @@
 package admin;
 
+import config.DateValidator;
 import config.Dialogs;
 import courses.CourseDatabases;
 import javafx.collections.FXCollections;
@@ -11,9 +12,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.DoubleStringConverter;
 import models.Courses;
 import models.TimeTable;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -58,9 +59,28 @@ public class CourseController implements Initializable {
     @FXML
     private Button deleteBtn;
 
+    @FXML
+    private MenuItem editMenuBtn;
+
+    @FXML
+    private MenuItem deleteMenuBtn;
+
+    @FXML
+    private Button cancelBtn;
+
+    @FXML
+    private MenuItem cancelMenuBtn;
+
+    @FXML
+    private MenuItem editTimeTableBtn;
+
+    @FXML
+    private MenuItem cancelTimeTableBtn;
+
     static AdminDashboard adminController;
 
     ObservableList<Courses> coursesData = FXCollections.observableArrayList();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -71,11 +91,32 @@ public class CourseController implements Initializable {
 
         //enabling multiple selection on table
         coursesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        coursesTable.getSelectionModel().setCellSelectionEnabled(true);
 
         timeCol.setCellFactory(TextFieldTableCell.forTableColumn());
         venueCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        courseNameCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        courseCodeCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        departmentCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        startDateCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        endDateCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        feeCol.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter() {
+            @Override
+            public Double fromString(String value) {
+                try {
+                    return super.fromString(value);
+                } catch (NumberFormatException e) {
+                    return Double.NaN; // An abnormal value
+                }
+            }
+        }));
+
+        timeTable.getSelectionModel().setCellSelectionEnabled(true);
 
         onChangingTimeTable();
+
+        onChangingCourses();
     }
 
     public void tableListener() {
@@ -84,12 +125,27 @@ public class CourseController implements Initializable {
         coursesTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 deleteBtn.setDisable(false);
+                deleteMenuBtn.setDisable(false);
+                editMenuBtn.setDisable(false);
+                cancelBtn.setDisable(false);
+                cancelMenuBtn.setDisable(false);
                 setTimeTable();
             } else {
                 deleteBtn.setDisable(true);
+                deleteMenuBtn.setDisable(true);
+                editMenuBtn.setDisable(true);
+                cancelBtn.setDisable(true);
+                cancelMenuBtn.setDisable(true);
             }
         });
+        timeTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 
+            editTimeTableBtn.setDisable(newSelection == null);
+            cancelTimeTableBtn.setDisable(newSelection == null);
+
+        });
+
+        onChangingCourses();
     }
 
     public AdminDashboard getAdmin() {
@@ -116,6 +172,9 @@ public class CourseController implements Initializable {
         Courses course = new CourseDatabases().getLatestCourse();
         coursesData.add(course);
         coursesTable.refresh();
+
+        tableListener();
+        onChangingCourses();
     }
 
     public void deleteCourse() {
@@ -204,13 +263,104 @@ public class CourseController implements Initializable {
             int id = timeTable.getSelectionModel().getSelectedItem().getId();
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setTime(t.getNewValue());
             new CourseDatabases().changeTimeTable(t.getNewValue(), "time", id);
-            setTimeTable();
+            timeTable.refresh();
         });
         venueCol.setOnEditCommit((TableColumn.CellEditEvent<TimeTable, String> t) -> {
             int id = timeTable.getSelectionModel().getSelectedItem().getId();
-            t.getTableView().getItems().get(t.getTablePosition().getRow()).setTime(t.getNewValue());
+            t.getTableView().getItems().get(t.getTablePosition().getRow()).setVenue(t.getNewValue());
             new CourseDatabases().changeTimeTable(t.getNewValue(), "class_venue", id);
-            setTimeTable();
+            timeTable.refresh();
         });
+    }
+
+    public void onChangingCourses() {
+
+        courseNameCol.setOnEditCommit((TableColumn.CellEditEvent<Courses, String> t) -> {
+            int id = coursesTable.getSelectionModel().getSelectedItem().getId();
+            t.getTableView().getItems().get(t.getTablePosition().getRow()).setCourseName(t.getNewValue());
+            new CourseDatabases().updateCourse(t.getNewValue(), "course_name", id);
+            coursesTable.refresh();
+        });
+        courseCodeCol.setOnEditCommit((TableColumn.CellEditEvent<Courses, String> t) -> {
+            int id = coursesTable.getSelectionModel().getSelectedItem().getId();
+            t.getTableView().getItems().get(t.getTablePosition().getRow()).setCourseCode(t.getNewValue());
+            new CourseDatabases().updateCourse(t.getNewValue(), "course_code", id);
+            coursesTable.refresh();
+        });
+        departmentCol.setOnEditCommit((TableColumn.CellEditEvent<Courses, String> t) -> {
+            int id = coursesTable.getSelectionModel().getSelectedItem().getId();
+            t.getTableView().getItems().get(t.getTablePosition().getRow()).setCourseName(t.getNewValue());
+            new CourseDatabases().updateCourse(t.getNewValue(), "department", id);
+        });
+        feeCol.setOnEditCommit((TableColumn.CellEditEvent<Courses, Double> t) -> {
+            int id = coursesTable.getSelectionModel().getSelectedItem().getId();
+            System.out.println(t.getNewValue());
+            if(t.getNewValue().isNaN()) {
+                new Dialogs().errorAlert("Input Error", "Please enter valid input",
+                        "Fee must be numeric, characters are not acceptable.");
+                t.getTableView().getItems().get(t.getTablePosition().getRow()).setFee(t.getOldValue());
+
+            }else{
+                t.getTableView().getItems().get(t.getTablePosition().getRow()).setFee(t.getNewValue());
+                new CourseDatabases().updateCourse(Double.toString(t.getNewValue()), "fee", id);
+            }
+            coursesTable.refresh();
+        });
+        startDateCol.setOnEditCommit((TableColumn.CellEditEvent<Courses, String> t) -> {
+            int id = coursesTable.getSelectionModel().getSelectedItem().getId();
+
+            boolean validate = DateValidator.validateDate(t.getNewValue());
+
+            if (validate) {
+                t.getTableView().getItems().get(t.getTablePosition().getRow()).setCourseStartDate(t.getNewValue());
+                new CourseDatabases().updateCourse(t.getNewValue(), "start_date", id);
+            } else {
+                new Dialogs().errorAlert("Invalid Date", "Please enter valid date",
+                        "Date should be in this pattern dd-mm-yyyy");
+            }
+            coursesTable.refresh();
+
+        });
+        endDateCol.setOnEditCommit((TableColumn.CellEditEvent<Courses, String> t) -> {
+            int id = coursesTable.getSelectionModel().getSelectedItem().getId();
+
+            boolean validate = DateValidator.validateDate(t.getNewValue());
+
+            if (validate) {
+                t.getTableView().getItems().get(t.getTablePosition().getRow()).setCourseEndDate(t.getNewValue());
+                new CourseDatabases().updateCourse(t.getNewValue(), "end_date", id);
+            } else {
+                new Dialogs().errorAlert("Invalid Date", "Please enter valid date",
+                        "Date should be in this pattern dd-mm-yyyy");
+            }
+            coursesTable.refresh();
+        });
+    }
+
+    @FXML
+    private void edit() {
+        int row_no = coursesTable.getFocusModel().getFocusedCell().getRow();
+        TableColumn<Courses, ?> col = coursesTable.getFocusModel().getFocusedCell().getTableColumn();
+        coursesTable.edit(row_no, col);
+        onChangingCourses();
+    }
+
+    @FXML
+    private void cancelSelection() {
+
+        coursesTable.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void cancelTimeTableSelection(){
+        timeTable.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void editTimeTable() {
+        int row_no = timeTable.getFocusModel().getFocusedCell().getRow();
+        TableColumn<TimeTable, ?> col = timeTable.getFocusModel().getFocusedCell().getTableColumn();
+        timeTable.edit(row_no, col);
+        onChangingTimeTable();
     }
 }

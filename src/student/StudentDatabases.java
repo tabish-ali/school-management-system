@@ -19,27 +19,40 @@ import java.util.Map;
 
 public class StudentDatabases {
 
-    public void registerStudent(Map<String, Object> student) {
-        try {
-            Connection conn = new DbConnection().connectToDb();
-            String register_students = "INSERT INTO students (name, reg_no, department, phone, email," +
-                    " fee, date_joined, username, password) VALUES(?,?,?,?,?,?,?,?,?)";
+    public boolean registerStudent(Map<String, Object> student) {
 
-            PreparedStatement preparedStatement = conn.prepareStatement(register_students);
-            preparedStatement.setString(1, (String) student.get("name"));
-            preparedStatement.setString(2, (String) student.get("reg_no"));
-            preparedStatement.setString(3, (String) student.get("department"));
-            preparedStatement.setString(4, (String) student.get("phone"));
-            preparedStatement.setString(5, (String) student.get("email"));
-            preparedStatement.setDouble(6, (Double) student.get("fee"));
-            preparedStatement.setString(7, (String) student.get("date_joined"));
-            preparedStatement.setString(8, (String) student.get("username"));
-            preparedStatement.setString(9, (String) student.get("password"));
-            preparedStatement.executeUpdate();
+        boolean created = false;
+
+        try {
+
+            if (!checkIfUsernameExits((String) student.get("username"), 0)) {
+                Connection conn = new DbConnection().connectToDb();
+                String register_students = "INSERT INTO students (name, reg_no, department, phone, email," +
+                        " fee, date_joined, username, password) VALUES(?,?,?,?,?,?,?,?,?)";
+
+                PreparedStatement preparedStatement = conn.prepareStatement(register_students);
+                preparedStatement.setString(1, (String) student.get("name"));
+                preparedStatement.setString(2, (String) student.get("reg_no"));
+                preparedStatement.setString(3, (String) student.get("department"));
+                preparedStatement.setString(4, (String) student.get("phone"));
+                preparedStatement.setString(5, (String) student.get("email"));
+                preparedStatement.setDouble(6, (Double) student.get("fee"));
+                preparedStatement.setString(7, (String) student.get("date_joined"));
+                preparedStatement.setString(8, (String) student.get("username"));
+                preparedStatement.setString(9, (String) student.get("password"));
+                preparedStatement.executeUpdate();
+
+                created = true;
+
+            } else {
+                new Dialogs().errorAlert("Username Error", "User with this username already exists",
+                        "Please choose another username.");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return  created;
     }
 
     public Students getLatestStudent() {
@@ -399,6 +412,7 @@ public class StudentDatabases {
 
     }
 
+
     public boolean updateCredentials(String username, String old_password, String new_password, int student_id) {
 
         // decrypting login password to plain string
@@ -453,5 +467,18 @@ public class StudentDatabases {
         }
 
         return check;
+    }
+
+    public void updateStudent(String value, String col_name, int student_id) {
+        try {
+            Connection conn = new DbConnection().connectToDb();
+            String update_query = "UPDATE students SET " + col_name + " = '" + value + "'"
+                    + " WHERE id = " + student_id;
+            PreparedStatement preparedStatement = conn.prepareStatement(update_query);
+            preparedStatement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

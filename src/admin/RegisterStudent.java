@@ -43,7 +43,6 @@ public class RegisterStudent implements Initializable {
     private PasswordField passwordField;
 
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -74,8 +73,7 @@ public class RegisterStudent implements Initializable {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        if(!name.isEmpty() && !department.isEmpty() && !date_joined.isEmpty()
-                && !username.isEmpty() && !password.isEmpty()) {
+        if (!name.isEmpty() && !department.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
 
             // reg_no is registration number of student
             String reg_no = generateRegNo(department);
@@ -95,10 +93,14 @@ public class RegisterStudent implements Initializable {
 
 
             StudentDatabases studentDatabases = new StudentDatabases();
-            studentDatabases.registerStudent(student_details);
-            AdminDashboard.admin.studentController.setNewStudent();
-        }else{
-            new Dialogs().warningAlert("Warning" ,"Please fill out the required fields",
+            boolean created = studentDatabases.registerStudent(student_details);
+
+            if (created) {
+                AdminDashboard.admin.studentController.setNewStudent();
+            }
+
+        } else {
+            new Dialogs().warningAlert("Warning", "Please fill out the required fields",
                     "You must complete the required information of student.");
         }
     }
@@ -113,7 +115,7 @@ public class RegisterStudent implements Initializable {
     }
 
     @FXML
-    private void clearForm(){
+    private void clearForm() {
         nameField.clear();
         departmentField.clear();
         emailField.clear();

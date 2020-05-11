@@ -55,7 +55,7 @@
             </VBox>
             <VBox prefHeight="50.0" prefWidth="598.0" spacing="5.0" styleClass="box">
                <children>
-                  <Label maxWidth="1.7976931348623157E308" styleClass="bold-label" text="Office No*">
+                  <Label maxWidth="1.7976931348623157E308" styleClass="bold-label" text="Office No">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -68,7 +68,7 @@
             </VBox>
             <VBox prefHeight="50.0" prefWidth="598.0" spacing="5.0" styleClass="box">
                <children>
-                  <Label maxWidth="1.7976931348623157E308" styleClass="bold-label" text="Salary*">
+                  <Label maxWidth="1.7976931348623157E308" styleClass="bold-label" text="Salary">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -81,7 +81,7 @@
             </VBox>
             <VBox prefHeight="50.0" prefWidth="598.0" spacing="5.0" styleClass="box">
                <children>
-                  <Label maxWidth="1.7976931348623157E308" styleClass="bold-label" text="Date*">
+                  <Label maxWidth="1.7976931348623157E308" styleClass="bold-label" text="Date">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -94,7 +94,7 @@
             </VBox>
             <VBox layoutX="10.0" layoutY="242.0" prefHeight="50.0" prefWidth="598.0" spacing="5.0" styleClass="box">
                <children>
-                  <Label maxWidth="1.7976931348623157E308" styleClass="bold-label" text="Username* ">
+                  <Label maxWidth="1.7976931348623157E308" styleClass="bold-label" text="Username*">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>

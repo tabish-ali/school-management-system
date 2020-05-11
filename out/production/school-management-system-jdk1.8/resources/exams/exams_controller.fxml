@@ -19,7 +19,9 @@
          </padding>
          <children>
             <Button layoutX="15.0" layoutY="21.0" mnemonicParsing="false" onAction="#addExam" styleClass="top-bar-btns" text="Add New" />
-            <Button layoutX="15.0" layoutY="22.0" mnemonicParsing="false" onAction="#deleteExams" styleClass="top-bar-btns" text="Delete" />
+            <Button fx:id="editBtn" disable="true" layoutX="96.0" layoutY="21.0" mnemonicParsing="false" onAction="#edit" styleClass="top-bar-btns" text="Edit" />
+            <Button fx:id="delBtn" disable="true" layoutX="15.0" layoutY="22.0" mnemonicParsing="false" onAction="#deleteExams" styleClass="top-bar-btns" text="Delete" />
+            <Button fx:id="cancelBtn" disable="true" layoutX="96.0" layoutY="21.0" mnemonicParsing="false" onAction="#cancel" styleClass="top-bar-btns" text="Cancel" />
          </children>
       </HBox>
       <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">

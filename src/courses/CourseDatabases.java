@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.CoursePlan;
 import models.Courses;
+import models.Faculty;
 import models.TimeTable;
 
 import java.sql.*;
@@ -77,7 +78,7 @@ public class CourseDatabases {
         return assigned;
     }
 
-    public int assignCourseToFaculty(ArrayList<Courses> courses, int id) {
+    public int assignCourseToFaculty(ArrayList<Courses> courses, Faculty faculty) {
 
         int courses_assigned = 0;
         boolean flag = true;
@@ -95,10 +96,12 @@ public class CourseDatabases {
                 // check if faculty has already registered for this course
 
                 if (!checkCourseAssigned(course.getId())) {
-                    preparedStatement.setInt(1, id);
+                    preparedStatement.setInt(1, faculty.getId());
                     preparedStatement.setInt(2, course.getId());
                     preparedStatement.executeUpdate();
                     courses_assigned++;
+
+                    setAssignedFaculty(course.getId(), faculty.getName());
 
                 } else {
                     flag = false;
@@ -450,16 +453,17 @@ public class CourseDatabases {
 
     // one course can be offered by multiple faculty so we are giving student choice to register
 
-    public void removeAssignedCourses(int course_id, int faculty_id) {
+    public void removeAssignedCourses(int course_id, Faculty faculty) {
 
         try {
             Connection conn = new DbConnection().connectToDb();
-            String remove_courses = "DELETE FROM faculty_pivot_courses WHERE faculty_id = " + faculty_id +
+            String remove_courses = "DELETE FROM faculty_pivot_courses WHERE faculty_id = " + faculty.getId() +
                     " and course_id = " + course_id;
             PreparedStatement preparedStatement = conn.prepareStatement(remove_courses);
 
             preparedStatement.executeUpdate();
 
+            setAssignedFaculty(course_id, "Not Assigned Yet");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -552,5 +556,31 @@ public class CourseDatabases {
             e.printStackTrace();
         }
         return course_plan;
+    }
+
+    public void updateCourse(String value, String col_name, int course_id) {
+        try {
+            Connection conn = new DbConnection().connectToDb();
+            String update_query = "UPDATE courses SET " + col_name + " = '" + value + "'"
+                    + " WHERE id = " + course_id;
+            PreparedStatement preparedStatement = conn.prepareStatement(update_query);
+            preparedStatement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setAssignedFaculty(int course_id, String faculty_name) {
+        try {
+            Connection conn = new DbConnection().connectToDb();
+            String update_query = "UPDATE courses SET faculty_name = '" + faculty_name + "'"
+                    + " WHERE id = " + course_id;
+            PreparedStatement preparedStatement = conn.prepareStatement(update_query);
+            preparedStatement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

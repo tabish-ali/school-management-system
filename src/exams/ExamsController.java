@@ -12,14 +12,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import models.Exams;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ExamsController implements Initializable {
+
+    @FXML
+    private Button editBtn, delBtn, cancelBtn;
 
     @FXML
     ExamsTable examsTableController;
@@ -33,20 +37,57 @@ public class ExamsController implements Initializable {
 
     static ExamsController examsController;
 
+    ContextMenu context_menu = new ContextMenu();
+
+    MenuItem edit_menu_btn = new MenuItem("Edit");
+    MenuItem del_menu_btn = new MenuItem("Delete");
+    MenuItem cancel_menu_btn = new MenuItem("Cancel");
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         examsController = this;
         examsList = examsTableController.getExamsList();
         examsTable = examsTableController.getExamsTable();
+
+    }
+
+    public void setContextMenu() {
+        tableListener();
+
+        context_menu.getItems().addAll(edit_menu_btn, del_menu_btn, cancel_menu_btn);
+
+        edit_menu_btn.setGraphic(new ImageView(new Image("resources/icons/edit_property_15px.png")));
+
+        del_menu_btn.setGraphic(new ImageView(new Image("resources/icons/remove_15px.png")));
+
+        cancel_menu_btn.setGraphic(new ImageView(new Image("resources/icons/cancel_15px.png")));
+
+        edit_menu_btn.setOnAction(e -> edit());
+
+        del_menu_btn.setOnAction(e -> deleteExams());
+
+        cancel_menu_btn.setOnAction(e -> cancel());
+
+        examsTable.setContextMenu(context_menu);
+    }
+
+    public void tableListener() {
+
+        // listen for table selection to enable action buttons related to table
+        examsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+
+            del_menu_btn.setDisable(newSelection == null);
+            edit_menu_btn.setDisable(newSelection == null);
+            cancel_menu_btn.setDisable(newSelection == null);
+            editBtn.setDisable(newSelection == null);
+            delBtn.setDisable(newSelection == null);
+            cancelBtn.setDisable(newSelection == null);
+        });
     }
 
     public ExamsTable getExamsTableController() {
         return examsTableController;
-    }
-
-    public ExamsEvaluation getEvaluateExamController() {
-        return uploadedExamsController.getExamsEvaluationController();
     }
 
     public UploadedExams getUploadedExamsController() {
@@ -89,4 +130,23 @@ public class ExamsController implements Initializable {
             }
         }
     }
+
+    @FXML
+    private void edit() {
+
+        int row_no = examsTable.getFocusModel().getFocusedCell().getRow();
+
+        TableColumn col = examsTable.getFocusModel().getFocusedCell().getTableColumn();
+
+        examsTable.edit(row_no, col);
+        examsTableController.onChangingExam();
+
+    }
+
+    @FXML
+    private void cancel() {
+        examsTable.getSelectionModel().clearSelection();
+    }
+
+
 }
